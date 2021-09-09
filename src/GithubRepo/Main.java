@@ -40,7 +40,7 @@ public class Main {
         }
         System.out.println("hello");
         List<Contributor> mostContributors = github.getMostContributers(mostForked,org.getContributers());
-        System.out.println("Repositories Are : ");
+        System.out.println("Contributors Are : ");
         System.out.println();
         for(Contributor contributor : mostContributors){
             System.out.println(contributor.getRepositoryName());

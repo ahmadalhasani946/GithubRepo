@@ -84,10 +84,6 @@ public class Github {
         for(int i=0; i < repository.length(); i++){
             System.out.println((i + 1) + "   Length   " + repository.length());
             JSONObject repo = repository.getJSONObject(i);
-            /*Contributor contributor = new Contributor();
-
-            contributor.setUserName(repo.getString("login"));
-            contributor.setContributionQuantity(repo.getInt("contributions"));*/
 
             Gson gson = new Gson();
             Contributor contributor = gson.fromJson(repo.toString(), Contributor.class);
