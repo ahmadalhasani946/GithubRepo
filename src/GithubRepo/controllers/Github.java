@@ -35,23 +35,22 @@ public class Github {
         return new JSONArray(responseBody);
     }
 
-    public Repository[] getMostForked(int forks){
+    public List<Repository> getMostForked(int forks){
         String link = "https://api.github.com/orgs/" + this.account + "/repos?per_page=100&type=public&page=";
         JSONArray repos = getJsonArray(link);
-        Repository[] sortedRepos = getRepositoriesForForked(repos);
+        List<Repository> sortedRepos = getRepositoriesForForked(repos);
 
-        if(forks > sortedRepos.length){
+        if(forks > sortedRepos.size()){
             return sortedRepos;
         }
         else {
-            Repository[] repositories = new Repository[forks];
-            System.arraycopy(sortedRepos, 0, repositories, 0, forks);
+            List<Repository> repositories = sortedRepos.subList(0, forks);
             return repositories;
         }
     }
 
-    public Repository[] getRepositoriesForForked(JSONArray repos){
-        Repository[] repositories = new Repository[repos.length()];
+    public List<Repository> getRepositoriesForForked(JSONArray repos){
+        List<Repository> repositoryList = new ArrayList<Repository>();
 
         for(int i=0; i < repos.length(); i++){
             JSONObject repo = repos.getJSONObject(i);
@@ -66,15 +65,16 @@ public class Github {
                 repository.setDescription("No Description");
             }
             repository.setContributorsUrl(repo.getString("contributors_url"));
-            repositories[i] = repository;
+            repositoryList.add(repository);
         }
 
-        Arrays.sort(repositories);
+        Collections.sort(repositoryList);
 
-        return repositories;
+
+        return repositoryList;
     }
 
-    public List<Contributor> getMostContributers(Repository[] repositories, int Contributers){
+    public List<Contributor> getMostContributers(List<Repository> repositories, int Contributers){
         List<Contributor> contributorList = new ArrayList<Contributor>();
 
         for (Repository value : repositories) {
@@ -89,46 +89,47 @@ public class Github {
     private Map<String, Integer> Contributors = new HashMap<String,Integer>();
 
     public void getContributors(List<Contributor> contributorList, JSONArray repository, int contributorsNumber, String RepositoryName){
-        Contributor[] contributorsArray = new Contributor[repository.length()];
+        List<Contributor> contributorsList = new ArrayList<Contributor>();
 
         for(int i=0; i < repository.length(); i++){
             System.out.println((i + 1) + "   Length   " + repository.length());
             JSONObject repo = repository.getJSONObject(i);
-            contributorsArray[i] = new Contributor();
+            Contributor contributor = new Contributor();
 
-            contributorsArray[i].setRepositoryName(RepositoryName);
-            contributorsArray[i].setUserName(repo.getString("login"));
-            contributorsArray[i].setContributionQuantity(repo.getInt("contributions"));
+            contributor.setRepositoryName(RepositoryName);
+            contributor.setUserName(repo.getString("login"));
+            contributor.setContributionQuantity(repo.getInt("contributions"));
 
             int numOfFollowers;
 
-            if(!Contributors.containsKey(contributorsArray[i].getUserName())){
+            if(!Contributors.containsKey(contributor.getUserName())){
                 System.out.println("Sending");
                 JSONArray followers = getJsonArray(repo.getString("followers_url") + "?per_page=100&page=");
                 numOfFollowers = followers.length();
-                Contributors.put(contributorsArray[i].getUserName(), numOfFollowers);
-                System.out.println(contributorsArray[i].getUserName() + " -> " + Contributors.get(contributorsArray[i].getUserName()));
+                Contributors.put(contributor.getUserName(), numOfFollowers);
+                System.out.println(contributor.getUserName() + " -> " + Contributors.get(contributor.getUserName()));
             }
             else{
                 System.out.println("Exist");
-                System.out.println(contributorsArray[i].getUserName() + " -> " + Contributors.get(contributorsArray[i].getUserName()));
-                numOfFollowers = Contributors.get(contributorsArray[i].getUserName());
+                System.out.println(contributor.getUserName() + " -> " + Contributors.get(contributor.getUserName()));
+                numOfFollowers = Contributors.get(contributor.getUserName());
             }
 
-            contributorsArray[i].setFollowersQuantity(numOfFollowers);
+            contributor.setFollowersQuantity(numOfFollowers);
+            contributorsList.add(contributor);
         }
 
         System.out.println("Size Of Contributors is => " + Contributors.size());
-        Arrays.sort(contributorsArray);
+        Collections.sort(contributorsList);
 
-        pushTheTopContributors(contributorsArray, contributorList, contributorsNumber);
+        pushTheTopContributors(contributorsList, contributorList, contributorsNumber);
     }
 
-    public void pushTheTopContributors(Contributor[] contributors, List<Contributor> contributorList, int contributorsNumber){
-        if(contributorsNumber > contributors.length){
-            contributorsNumber = contributors.length;
+    public void pushTheTopContributors(List<Contributor>  contributors, List<Contributor> contributorList, int contributorsNumber){
+        if(contributorsNumber > contributors.size()){
+            contributorsNumber = contributors.size();
         }
-        contributorList.addAll(Arrays.asList(contributors).subList(0, contributorsNumber));
+        contributorList.addAll(contributors.subList(0, contributorsNumber));
     }
 
 

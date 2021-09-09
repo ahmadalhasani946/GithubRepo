@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class CSV {
-    public static void createForksFile(Repository[] repositories, String accountName) {
+    public static void createForksFile(List<Repository> repositories, String accountName) {
         try{
             String outputFile = accountName + "_repos.csv";
             CSVPrinter csvFilePrinter = null;

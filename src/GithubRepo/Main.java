@@ -28,7 +28,7 @@ public class Main {
         Organization org = new Organization(name,forked,contributors);
 
         Github github = new Github(org.getName());
-        Repository[] mostForked = github.getMostForked(org.getForks());
+        List<Repository> mostForked = github.getMostForked(org.getForks());
         System.out.println("Repositories Are : ");
         System.out.println();
         for(Repository repo : mostForked){
