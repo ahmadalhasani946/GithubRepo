@@ -1,14 +1,16 @@
 package GithubRepo.models;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.google.gson.annotations.SerializedName;
 import org.json.*;
 
 public class Repository implements Comparable<Repository> {
     private String name;
+    @SerializedName("html_url")
     private String htmlUrl;
     private String description;
+    @SerializedName("contributors_url")
     private String contributorsUrl;
+    @SerializedName("forks")
     private int forksCount;
 
     public void setName(String name){
@@ -19,7 +21,6 @@ public class Repository implements Comparable<Repository> {
         return this.name;
     }
 
-    @JSONPropertyName("html_url")
     public void setHtmlUrl(String htmlUrl){
         this.htmlUrl = htmlUrl;
     }

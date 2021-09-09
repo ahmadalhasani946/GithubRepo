@@ -15,7 +15,7 @@ public class Fetcher {
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json;charset=UTF-8");
             conn.setRequestProperty("User-Agent", "request");
-            conn.setRequestProperty("Authorization", "Bearer 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");
+            conn.setRequestProperty("Authorization", "Bearer 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");
 
             if (conn.getResponseCode() != 200) {
                 throw new RuntimeException("Failed : HTTP error code : "

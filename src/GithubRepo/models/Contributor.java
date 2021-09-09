@@ -1,8 +1,12 @@
 package GithubRepo.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Contributor implements Comparable<Contributor> {
     private String repositoryName;
+    @SerializedName("login")
     private String userName;
+    @SerializedName("contributions")
     private int contributionQuantity;
     private int followersQuantity;
 

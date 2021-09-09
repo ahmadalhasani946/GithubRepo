@@ -2,8 +2,7 @@ package GithubRepo.controllers;
 
 import GithubRepo.models.Contributor;
 import GithubRepo.models.Repository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.json.*;
 import java.util.*;
 
@@ -54,17 +53,8 @@ public class Github {
 
         for(int i=0; i < repos.length(); i++){
             JSONObject repo = repos.getJSONObject(i);
-            Repository repository = new Repository();
-            repository.setForksCount(repo.getInt("forks_count"));
-            repository.setName(repo.getString("name"));
-            repository.setHtmlUrl(repo.getString("html_url"));
-            if(repo.get("description") != null){
-                repository.setDescription(repo.get("description").toString());
-            }
-            else {
-                repository.setDescription("No Description");
-            }
-            repository.setContributorsUrl(repo.getString("contributors_url"));
+            Gson gson = new Gson();
+            Repository repository = gson.fromJson(repo.toString(), Repository.class);
             repositoryList.add(repository);
         }
 
@@ -94,12 +84,14 @@ public class Github {
         for(int i=0; i < repository.length(); i++){
             System.out.println((i + 1) + "   Length   " + repository.length());
             JSONObject repo = repository.getJSONObject(i);
-            Contributor contributor = new Contributor();
+            /*Contributor contributor = new Contributor();
 
-            contributor.setRepositoryName(RepositoryName);
             contributor.setUserName(repo.getString("login"));
-            contributor.setContributionQuantity(repo.getInt("contributions"));
+            contributor.setContributionQuantity(repo.getInt("contributions"));*/
 
+            Gson gson = new Gson();
+            Contributor contributor = gson.fromJson(repo.toString(), Contributor.class);
+            contributor.setRepositoryName(RepositoryName);
             int numOfFollowers;
 
             if(!Contributors.containsKey(contributor.getUserName())){
